@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:kommunicate_flutter/kommunicate_flutter.dart';
 
 import 'app_init.dart';
 
@@ -7,10 +9,90 @@ void main()async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
+
+  MethodChannel channel = MethodChannel('kommunicate_flutter');
+  // This widget is the root of your application.
+  @override
+  void initState() {
+    channel.setMethodCallHandler((call)async{
+      if(call.method == 'onPluginLaunch'){
+        print("OnPluginLaunch");
+        print(call.arguments);
+      } else if(call.method == 'onPluginDismiss'){
+        print("onPluginDismiss");
+        print(call.arguments);
+      } else if(call.method == 'onConversationResolved'){
+        print("onConversationResolved");
+        print(call.arguments);
+      } else if(call.method == 'onConversationRestarted'){
+        print("onConversationRestarted");
+        print(call.arguments);
+      } else if(call.method == 'onRichMessageButtonClick'){
+        print("onRichMessageButtonClick");
+        print(call.arguments);
+      } else if(call.method == 'onStartNewConversation'){
+        print("onStartNewConversation");
+        print(call.arguments);
+      } else if(call.method == 'onSubmitRatingClick'){
+        print("onSubmitRatingClick");
+        print(call.arguments);
+      } else if(call.method == 'onMessageReceived'){
+        print("onMessageReceived");
+        print(call.arguments);
+      } else if(call.method == 'onBackButtonClicked'){
+        print("onBackButtonClicked");
+        print(call.arguments);
+      } else if(call.method == 'onMessageSent'){
+        print("onMessageSent");
+        print(call.arguments);
+      }
+      else if(call.method == 'onAttachmentClick'){
+        print("onAttachmentClick");
+        print(call.arguments);
+      }
+      else if(call.method == 'OnFaqClick'){
+        print("OnFaqClick");
+        print(call.arguments);
+      }
+      else if(call.method == 'onLocationClick'){
+        print("onLocationClick");
+        print(call.arguments);
+      }
+      else if(call.method == 'onNotificationClick'){
+        print("onNotificationClick");
+        print(call.arguments);
+      }
+      else if(call.method == 'onVoiceButtonClick'){
+        print("onVoiceButtonClick");
+        print(call.arguments);
+      }
+      else if(call.method == 'onRatingEmoticonsClick'){
+        print("onRatingEmoticonsClick");
+        print(call.arguments);
+      }
+      else if(call.method == 'onRateConversationClick'){
+        print("onRateConversationClick");
+        print(call.arguments);
+      }
+
+      return null;
+    });    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -109,7 +191,18 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: ()async{
+
+            try {
+              dynamic conversationObject = {
+                'appId': '1399b0b2d35860300bda59a27f7c6b4a7' // The [APP_ID](https://dashboard.kommunicate.io/settings/install) obtained from kommunicate dashboard.
+              };
+              dynamic result = await KommunicateFlutterPlugin.buildConversation(conversationObject);
+              print("Conversation builder success : " + result.toString());
+            } on Exception catch (e) {
+              print("Conversation builder error occurred : " + e.toString());
+            }
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
